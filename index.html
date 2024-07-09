@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <title>Formatador</title>
+</head>
+
+<body>
+    <div id="app">
+        <div class="flex flex-wrap justify-center mx-auto p-4 bg-blue-200">
+
+            <h2 class="font-bold text-xl">Formatador de texto</h2>
+        </div>
+        <div class="flex flex-wrap justify-center mx-auto p-4 bg-gray-100">
+            <textarea v-model="texto" class="border-2 border-gray-300 rounded-lg p-4 w-full h-64"
+                placeholder="Digite o texto aqui">
+                 </textarea>
+                <div class="flex flex-row gap-4 my-4">
+
+                    <button @click="formatar()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Formatar</button>
+                    <button @click="baixarArquivo" class="bg-green-500 hover:bg-blue-700 text-white font-bold  py-2 px-4 rounded">Baixar Arquivo</button>
+                </div>
+
+                    
+
+        </div>
+    </div>
+
+</body>
+<script>
+    const { createApp, ref } = Vue
+
+    createApp({
+        setup() {
+            const texto = ref("")
+            const formatar = () => {
+                texto.value = texto.value.replace(/\s+/g, ',');
+                adicionarValores();
+                formatarPalavras();
+            }
+            
+            const adicionarValores = () => {
+                texto.value = 'bloco,ano,protocolo,' + texto.value;
+            }
+            const formatarPalavras = () => {
+                const palavras = texto.value.split(',');
+                let resultado = '';
+                for (let i = 0; i < palavras.length; i++) {
+                    if ((i + 1) % 3 === 0) {
+                        resultado += palavras[i] + '\n';
+                    } else {
+                        resultado += palavras[i] + ',';
+                    }
+                }
+                texto.value = resultado.trim();
+            }
+
+            const baixarArquivo = () => {
+                const link = document.createElement('a');
+                link.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(texto.value);
+                link.download = 'caixa.csv';
+                link.click();
+            }
+
+            return {
+                texto,
+                formatar,
+                formatarPalavras,
+                baixarArquivo,
+                 adicionarValores
+
+            }
+        }
+    }).mount('#app')
+</script>
+
+
+</html>
